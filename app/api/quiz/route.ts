@@ -259,14 +259,16 @@ export async function POST(req: NextRequest) {
 
     case "resetGame": {
       await updateSession({ phase: "lobby", current_question: -1, time_left: QUESTION_TIME, question_start_time: 0 });
-      await supabase.from("players").update({ score: 0, streak: 0, answered: false }).neq("session_id", "");
-      await supabase.from("answers").delete().neq("id", 0);
-      await supabase.from("quiz_events").delete().neq("id", 0);
+      // Supprimer les réponses d'abord (foreign key vers players)
+      await supabase.from("answers").delete().gte("id", 0);
+      // Supprimer tous les joueurs (ils devront se reconnecter)
+      await supabase.from("players").delete().neq("session_id", "");
+      // Nettoyer les événements
+      await supabase.from("quiz_events").delete().gte("id", 0);
 
       await broadcast("reset", {});
-      const pc = await getPlayerCount();
-      await broadcast("playercount", { count: pc });
-      await broadcast("leaderboard", { leaderboard: await getLeaderboard() });
+      await broadcast("playercount", { count: 0 });
+      await broadcast("leaderboard", { leaderboard: [] });
 
       return NextResponse.json({ ok: true });
     }
