@@ -16,7 +16,7 @@ import {
   MapPin,
   Calendar,
   Users,
-  Infinity,
+  Infinity as InfinityIcon,
 } from "lucide-react";
 
 function RevealSection({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -145,7 +145,7 @@ export default function HomePage() {
           <StatCard value="2021" label="Année de création" icon={Calendar} />
           <StatCard value="7" label="Athlètes TBYT" icon={Users} delay={0.1} />
           <StatCard value="972" label="Martinique" icon={MapPin} delay={0.2} />
-          <StatCard value="∞" label="Ambition" icon={Infinity} delay={0.3} />
+          <StatCard value="∞" label="Ambition" icon={InfinityIcon} delay={0.3} />
         </div>
       </section>
 
